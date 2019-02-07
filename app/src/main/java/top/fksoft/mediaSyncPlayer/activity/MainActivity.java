@@ -1,16 +1,12 @@
 package top.fksoft.mediaSyncPlayer.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.utils.BaseActivity;
@@ -23,31 +19,23 @@ public class MainActivity extends BaseActivity  {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
-    //读写权限
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    //请求状态码
-    private static int REQUEST_PERMISSION_CODE = 1;
     @Override
     public void initData() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
-            }
-        }
-
-
+        //申请权限
+        sendPermissions(new String[]
+                {
+                        "读取设备外部存储空间",
+                        "写入设备外部存储空间",
+                        "访问摄像头进行拍照"
+                }
+                ,new String[]
+                {
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                });
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION_CODE) {
-            for (int i = 0; i < permissions.length; i++) {
-                Log.i("MainActivity", "申请的权限为：" + permissions[i] + ",申请结果：" + grantResults[i]);
-            }
-        }
-    }
+
     @Override
     public void initView() {
         toolbar = findViewById(R.id.toolbar);
@@ -100,5 +88,10 @@ public class MainActivity extends BaseActivity  {
                     .setAction(R.string.agree, v -> super.onBackPressed()).show();
         }
 
+    }
+
+    @Override
+    public void permissionError(String[] permissions) {
+        super.permissionError(permissions);
     }
 }
