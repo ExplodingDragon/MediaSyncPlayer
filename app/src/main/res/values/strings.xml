@@ -7,4 +7,5 @@
     <string name="exitMessage">确定退出程序？</string>
     <string name="agree">确定</string>
     <string name="dis_agree">取消</string>
+    <string name="set_title">设置</string>
 </resources>

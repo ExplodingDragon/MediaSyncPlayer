@@ -7,7 +7,7 @@
         <item
                 android:id="@+id/nav_camera"
                 android:checked="true"
-                android:title="首页"/>
+                android:title="仪表盘"/>
         <item
                 android:id="@+id/nav_gallery"
                 android:title="Gallery"/>

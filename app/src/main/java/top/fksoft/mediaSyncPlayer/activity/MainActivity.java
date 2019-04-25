@@ -1,27 +1,28 @@
 package top.fksoft.mediaSyncPlayer.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import android.widget.Button;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.test.android.dao.BaseActivity;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private static final String TAG = "MainActivity";
+    private Button down;
+
     @Override
     public void initData() {
         //申请权限
@@ -38,57 +39,26 @@ public class MainActivity extends BaseActivity {
                         Manifest.permission.CAMERA
                 });
 
-        Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
-            for (int i = 0; i < 12; i++) {
-                emitter.onNext(i);
-                Log.e(TAG, "initData: " + i );
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .subscribe(new Observer<Integer>() {
-            private Disposable d;
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                this.d = d;
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                if (integer > 5){
-                    d.dispose();
-                }
-                Log.e(TAG, "onNext: " + integer );
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: " );
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete: " );
-            }
-        });
     }
 
     @Override
     public void initView() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        findViewById(R.id.down);
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        findViewById(R.id.down).setOnClickListener(this::onClick);
+        down = findViewById(R.id.down);
+        down.setOnClickListener(this::onClick);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.down:
-                showToast(R.string.agree);
+                startActivity(new Intent(this,SetActivity.class));
                 break;
         }
     }
@@ -115,5 +85,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 }

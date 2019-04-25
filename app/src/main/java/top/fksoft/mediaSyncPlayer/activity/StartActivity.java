@@ -3,8 +3,10 @@ package top.fksoft.mediaSyncPlayer.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import top.fksoft.mediaSyncPlayer.R;
+import top.fksoft.mediaSyncPlayer.utils.ActivityUtils;
 import top.fksoft.test.android.dao.BaseActivity;
 
 import java.util.Timer;
@@ -12,9 +14,11 @@ import java.util.TimerTask;
 
 public class StartActivity extends BaseActivity {
 
+    private LinearLayout statusBar;
+
     @Override
     public int initLayout() {
-        hide();
+//        hide();
         return R.layout.activity_start;
     }
 
@@ -39,7 +43,8 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        statusBar = findViewById(R.id.statusBar);
+        statusBar.setPadding(0,0,0, ActivityUtils.getDaoHangHeight(getContext()));
     }
 
     @Override
