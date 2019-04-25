@@ -7,18 +7,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import top.fksoft.mediaSyncPlayer.R;
-import top.fksoft.mediaSyncPlayer.utils.BaseActivity;
-import top.fksoft.mediaSyncPlayer.utils.FileChooseUtils;
+import top.fksoft.test.android.dao.BaseActivity;
 
-import java.io.File;
-import java.io.IOException;
-
-public class MainActivity extends BaseActivity  {
+public class MainActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private static final String TAG = "MainActivity";
     @Override
     public void initData() {
         //申请权限
@@ -34,6 +37,39 @@ public class MainActivity extends BaseActivity  {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA
                 });
+
+        Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+            for (int i = 0; i < 12; i++) {
+                emitter.onNext(i);
+                Log.e(TAG, "initData: " + i );
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .subscribe(new Observer<Integer>() {
+            private Disposable d;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                this.d = d;
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if (integer > 5){
+                    d.dispose();
+                }
+                Log.e(TAG, "onNext: " + integer );
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " );
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: " );
+            }
+        });
     }
 
     @Override
@@ -46,25 +82,13 @@ public class MainActivity extends BaseActivity  {
                 this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        findViewById(R.id.down).setOnClickListener(this::onClick);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.down:
-                try {
-                    FileChooseUtils fileChooseUtils = new FileChooseUtils(new File("/sdcard/"), getContext());
-                    fileChooseUtils.addExtension("mp3");
-                    fileChooseUtils.showFileChooseDialog("选择", (isChecked, check) -> {
-                        if (isChecked) {
-                            Snackbar.make(getCurrentFocus(), "选择：" + check.getAbsolutePath(), Snackbar.LENGTH_SHORT)
-                                    .setAction(R.string.agree, null).show();
-                        }
-                    });
-
-                } catch (IOException e) {
-
-
-                }
+                showToast(R.string.agree);
                 break;
         }
     }
@@ -90,8 +114,6 @@ public class MainActivity extends BaseActivity  {
 
     }
 
-    @Override
-    public void permissionError(String[] permissions) {
-        super.permissionError(permissions);
-    }
+
+
 }

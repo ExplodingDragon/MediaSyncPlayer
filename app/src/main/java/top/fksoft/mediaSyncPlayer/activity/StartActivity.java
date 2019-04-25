@@ -5,7 +5,7 @@ import android.os.Build;
 import android.view.View;
 import android.widget.Toast;
 import top.fksoft.mediaSyncPlayer.R;
-import top.fksoft.mediaSyncPlayer.utils.BaseActivity;
+import top.fksoft.test.android.dao.BaseActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +20,7 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        getCfgEdit().putBoolean("debug",true).commit();
+        getCfgEdit().putBoolean("debug",false).commit();
         int delay = 1500;
         if (getConfig().contains("debug")){
             if (getConfig().getBoolean("debug",false)){
