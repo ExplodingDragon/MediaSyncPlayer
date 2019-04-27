@@ -1,4 +1,4 @@
-package top.fksoft.mediaSyncPlayer.base;
+package top.fksoft.mediaSyncPlayer.utils.base;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;
