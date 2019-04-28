@@ -17,11 +17,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import top.fksoft.mediaSyncPlayer.R;
+import top.fksoft.mediaSyncPlayer.fragment.PlayListFragment;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
-import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
 import top.fksoft.mediaSyncPlayer.utils.BitmapUtils;
+import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
 import top.fksoft.test.android.dao.BaseActivity;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +48,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private NavigationView navView;
     private LinearLayout nav_root_layout;
     private SharedPreferences softSet;
+    private MainBaseFragment[] fragments = new MainBaseFragment[]{new PlayListFragment()};
 
     @Override
     public void initData() {
@@ -55,7 +58,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void initView() {
         softSet = SoftPrefFragment.getSharedPreferences(getContext());
-        AndroidUtils.immersive(getContext());
+//        AndroidUtils.immersive(getContext());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -70,7 +73,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View headerView = navView.getHeaderView(0);
         nav_root_layout = headerView.findViewById(R.id.nav_layout);
         sendPermissions(PERM_NAME, PERM);
+        setFragment(fragments[0]);
+    }
 
+    private void setFragment(MainBaseFragment fragment){
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, fragment).commit();
+        setTitle(fragment.title());
     }
 
     @Override
@@ -86,10 +94,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         drawerLayout.closeDrawer(GravityCompat.START);
-        if (menuItem.getGroupId() == R.id.menu_list) {
-            setTitle(menuItem.getTitle());
-        }
         switch (menuItem.getItemId()) {
+            case R.id.nav_playList:
+                setFragment(fragments[0]);
+                break;
             case R.id.nav_setting:
                 startActivity(new Intent(getContext(), SettingsActivity.class));
                 break;
@@ -109,25 +117,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void permissionSuccessful(int i) {//授权成功
-        updateNavWallpaper();
+        nav_root_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    nav_root_layout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
+                }else {
+                    nav_root_layout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
+                }
+                double width = nav_root_layout.getWidth();
+                double height = nav_root_layout.getHeight();
+                updateNavWallpaper(width/height);
+            }
+        });
+        //刷新显示
     }
 
-    private void updateNavWallpaper() { //显示左侧UI
+    private void updateNavWallpaper(double prop) { //显示左侧UI
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
         Bitmap bm = ((BitmapDrawable) wallpaperDrawable).getBitmap();
-        double prop = 2.3;
-        try {
-            prop = Double.parseDouble(softSet.getString("edit_text_preference", prop + ""));
-        } catch (Exception e) {
-            softSet.edit().putString("edit_text_preference", prop + "").commit();
-        }
         Bitmap formatWallpaper = BitmapUtils.cropBitmap(bm, prop);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             nav_root_layout.setBackground(new BitmapDrawable(formatWallpaper));
         } else {
             nav_root_layout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
         }
-    }
+    } //显示壁纸
 
 }

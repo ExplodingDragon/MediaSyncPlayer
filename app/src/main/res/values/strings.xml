@@ -27,6 +27,7 @@
     <string name="server_autoRun">服务器自动启动</string>
     <string name="server_autoRun_summary">服务器在软件开启时自动启动</string>
     <string name="client_config">客户端管理</string>
+    <string name="about">关于</string>
 
 
 </resources>
