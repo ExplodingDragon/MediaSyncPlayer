@@ -9,4 +9,9 @@
     <string name="dis_agree">取消</string>
     <string name="set_title">设置</string>
     <string name="permission_read_storage">读取SD卡文件</string>
+    <string name="playList">播放列表</string>
+    <string name="server_config">服务器配置</string>
+    <string name="server_status">仪表盘</string>
+    <string name="setting">设置</string>
+    <string name="nav_other">其他选项</string>
 </resources>
