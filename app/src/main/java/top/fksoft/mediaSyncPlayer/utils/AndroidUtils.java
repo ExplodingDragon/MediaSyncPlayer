@@ -25,7 +25,7 @@ public class AndroidUtils {
      * @param context  程序上下文
      * @return 导航栏高度
      */
-    public static int getStatusBarHeight(Context context) {
+    public static int getNavigationBarHeight(Context context) {
         int result = 0;
         int resourceId = 0;
         int rid = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
@@ -36,7 +36,34 @@ public class AndroidUtils {
             return 0;
     }
 
+    /**
+     * 获取手机状态栏高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusBarHeight(Context context) {
+//        Class<?> c;
+//        Object obj;
+//        Field field;
+//        int x, statusBarHeight = 0;
+//        try {
+//            c = Class.forName("com.android.internal.R$dimen");
+//            obj = c.newInstance();
+//            field = c.getField("status_bar_height");
+//            x = Integer.parseInt(field.get(obj).toString());
+//            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+//        } catch (Exception e1) {
+//        }
+//        return statusBarHeight;
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
 
+    }
     /**
      * <p>得到Wifi下Ipv4 UDP广播地址</p>
      * @param context 上下文

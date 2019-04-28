@@ -5,4 +5,6 @@ import top.fksoft.test.android.dao.BaseFragment;
 
 public abstract class MainBaseFragment extends BaseFragment<MainActivity> {
     public abstract int title();
+
+
 }

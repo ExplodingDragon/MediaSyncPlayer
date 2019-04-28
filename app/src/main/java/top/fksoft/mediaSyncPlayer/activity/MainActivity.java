@@ -14,14 +14,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.*;
 import android.widget.LinearLayout;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.PlayListFragment;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
+import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
 import top.fksoft.mediaSyncPlayer.utils.BitmapUtils;
 import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
 import top.fksoft.test.android.dao.BaseActivity;
@@ -49,6 +47,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private LinearLayout nav_root_layout;
     private SharedPreferences softSet;
     private MainBaseFragment[] fragments = new MainBaseFragment[]{new PlayListFragment()};
+    private MainBaseFragment fragment  = null;
+    private android.widget.TextView statusBar;
+
 
     @Override
     public void initData() {
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void initView() {
         softSet = SoftPrefFragment.getSharedPreferences(getContext());
-//        AndroidUtils.immersive(getContext());
+        AndroidUtils.immersive(getContext());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -74,10 +75,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         nav_root_layout = headerView.findViewById(R.id.nav_layout);
         sendPermissions(PERM_NAME, PERM);
         setFragment(fragments[0]);
-
+        statusBar = findViewById(R.id.statusBar);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            layoutParams.height = AndroidUtils.getStatusBarHeight(getContext());
+        }else {
+            layoutParams.height = 0;
+        }
+        statusBar.setLayoutParams(layoutParams);
     }
 
     private void setFragment(MainBaseFragment fragment){
+        if (fragment == null)
+            return;
+        this.fragment = fragment;
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, fragment).commit();
         setTitle(fragment.title());
     }

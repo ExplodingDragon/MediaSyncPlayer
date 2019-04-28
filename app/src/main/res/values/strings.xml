@@ -28,6 +28,11 @@
     <string name="server_autoRun_summary">服务器在软件开启时自动启动</string>
     <string name="client_config">客户端管理</string>
     <string name="about">关于</string>
+    <string name="playlist_songList">创建的歌单(0)</string>
+    <string name="playlist_songList_1">创建的歌单(%d)</string>
+    <string name="playlist_localSong">本地音乐(%d)</string>
+    <string name="playlist_history">最近播放(%d)</string>
+    <string name="playlist_like">我喜欢的(%d)</string>
 
 
 </resources>

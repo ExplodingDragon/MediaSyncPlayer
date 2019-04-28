@@ -32,7 +32,7 @@ public class StartActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        status.setPadding(0, 0, 0, AndroidUtils.getStatusBarHeight(this));
+        status.setPadding(0, 0, 0, AndroidUtils.getNavigationBarHeight(this));
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(new AlphaAnimation(0.1f, 1.0f));
         Animation translate = new TranslateAnimation(
