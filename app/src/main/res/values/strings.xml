@@ -14,4 +14,19 @@
     <string name="server_status">仪表盘</string>
     <string name="setting">设置</string>
     <string name="nav_other">其他选项</string>
+    <string name="server_status_1">服务器负载：0/16</string>
+    <string name="server_status_2">服务器负载：%d/%d</string>
+    <string name="navigation_drawer_open">打开</string>
+    <string name="navigation_drawer_close">关闭</string>
+    <string name="connect_client">客户端模式</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="set_nav_back">侧边栏图片比例</string>
+    <string name="set_nav_back_summary">设置侧边栏图片长宽比例，修复图片拉伸</string>
+    <string name="set_nav_back_hint">请输入数字(double)</string>
+    <string name="set_nav_back_dialog_title">侧边栏比例（宽度/高度）</string>
+    <string name="server_autoRun">服务器自动启动</string>
+    <string name="server_autoRun_summary">服务器在软件开启时自动启动</string>
+    <string name="client_config">客户端管理</string>
+
+
 </resources>
