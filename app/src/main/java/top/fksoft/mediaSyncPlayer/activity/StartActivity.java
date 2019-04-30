@@ -2,6 +2,7 @@ package top.fksoft.mediaSyncPlayer.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import top.fksoft.mediaSyncPlayer.R;
+import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
 import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
 
 import java.util.Timer;
@@ -18,21 +20,29 @@ import java.util.TimerTask;
 
 public class StartActivity extends Activity {
 
-    private LinearLayout statusBar;
-    private LinearLayout status;
-
+    private LinearLayout logo;
+    private LinearLayout navigation;
+    private SharedPreferences softSet;
+    private boolean seek = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        initView();
+        softSet = SoftPrefFragment.getSharedPreferences(this);
+        if (softSet.getBoolean("seek_start",false)) {
+            seek = true;
+            toMain();
+        }
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        status.setPadding(0, 0, 0, AndroidUtils.getNavigationBarHeight(this));
+        if (seek)
+            return;
+        initView();
+        navigation.setPadding(0, 0, 0, AndroidUtils.getNavigationBarHeight(this));
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(new AlphaAnimation(0.1f, 1.0f));
         Animation translate = new TranslateAnimation(
@@ -45,7 +55,7 @@ public class StartActivity extends Activity {
         animationSet.setDuration(1000);
         animationSet.setRepeatCount(-1);
         animationSet.setFillAfter(true);
-        statusBar.startAnimation(animationSet);
+        logo.startAnimation(animationSet);
         animationSet.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -58,9 +68,7 @@ public class StartActivity extends Activity {
                     @Override
                     public void run() {
                         runOnUiThread(() -> {
-                            startActivity(new Intent(StartActivity.this, MainActivity.class));
-                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                            finish();
+                            toMain();
 
                         });
                     }
@@ -75,6 +83,12 @@ public class StartActivity extends Activity {
 
     }
 
+    private void toMain() {
+        startActivity(new Intent(StartActivity.this, MainActivity.class));
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -84,7 +98,7 @@ public class StartActivity extends Activity {
     }
 
     private void initView() {
-        statusBar = findViewById(R.id.statusBar);
-        status = findViewById(R.id.status);
+        logo = findViewById(R.id.logo);
+        navigation = findViewById(R.id.NavigationBar);
     }
 }

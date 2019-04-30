@@ -15,7 +15,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="15dp"
-                android:id="@+id/statusBar"
+                android:id="@+id/logo"
                 android:gravity="bottom|center">
             <ImageView
                     android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/status"
+                    android:id="@+id/NavigationBar"
                     android:orientation="horizontal"/>
         </LinearLayout>
     </LinearLayout>

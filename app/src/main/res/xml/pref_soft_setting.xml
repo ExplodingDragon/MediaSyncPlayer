@@ -18,6 +18,16 @@
                 android:inputType="number"
                 android:lines="1"/>
     </PreferenceCategory>
+    <SwitchPreference
+            android:defaultValue="false"
+            android:title="@string/close_status"
+            android:summary="@string/close_status_summary"
+            android:key="status"/>
+    <SwitchPreference
+            android:defaultValue="false"
+            android:title="@string/seek_start"
+            android:summary="@string/seek_start_summary"
+            android:key="seek_start"/>
     <PreferenceCategory
             android:title="@string/server_config">
 

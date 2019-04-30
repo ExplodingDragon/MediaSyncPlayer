@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,16 @@ import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
 public class PlayListFragment extends MainBaseFragment {
     private static final String TAG = "PlayListFragment";
     private ListView musicCategories;
-    private ImageView image;
-    private AnimationDrawable drawable;
     private ListBean[] bean;
+    private ImageView extendedImage;
+    private TextView playlistSize; //歌单文字选项
+    private ImageView addSongList; //添加新歌单
+    private ImageView songListConfig;//管理歌单
+    private RecyclerView musicSongLists; //歌单列表
 
     @Override
     public int initLayout() {
-        return R.layout.main_fragment_playlist;
+        return R.layout.main_playlist;
     }
 
     @Override
@@ -39,21 +43,40 @@ public class PlayListFragment extends MainBaseFragment {
                 new ListBean(R.mipmap.playlist_like,getString(R.string.playlist_like,0))
         };
         musicCategories = findViewById(R.id.music_categories);
-        image = findViewById(R.id.image);
-        drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.arrow_open);
-        image.setImageDrawable(drawable);
-        image.setOnClickListener(this::onClick);
+        extendedImage = findViewById(R.id.ExtendedImage);
+        playlistSize = findViewById(R.id.playlist_size);
+        addSongList = findViewById(R.id.addSongList);
+        songListConfig = findViewById(R.id.songList_config);
+        musicSongLists = findViewById(R.id.music_song_lists);
+
+
         musicCategories.setAdapter(new ItemAdapter(getContext(),R.layout.playlist_item_song,bean));
+        playlistSize.setOnClickListener(this::onClick);
+        extendedImage.setOnClickListener(this::onClick);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.image:
-                drawable.start();
+            case R.id.playlist_size:
+            case R.id.ExtendedImage:
+                showSongLists();
                 break;
         }
+    }
+
+    private void showSongLists() {
+        AnimationDrawable frameAnim;
+        if (musicSongLists.getVisibility() == View.VISIBLE){
+            musicSongLists.setVisibility(View.GONE);
+            frameAnim = (AnimationDrawable) getResources().getDrawable(R.drawable.arrow_close);
+        }else {
+            musicSongLists.setVisibility(View.VISIBLE);
+            frameAnim = (AnimationDrawable) getResources().getDrawable(R.drawable.arrow_open);
+        }
+        extendedImage.setImageDrawable(frameAnim);
+        frameAnim.start();
     }
 
     @Override

@@ -75,14 +75,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         nav_root_layout = headerView.findViewById(R.id.nav_layout);
         sendPermissions(PERM_NAME, PERM);
         setFragment(fragments[0]);
-        statusBar = findViewById(R.id.statusBar);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
+        statusBar = findViewById(R.id.logo);
+        setStatusSize();
+    }
+
+    private void setStatusSize() {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            layoutParams.height = AndroidUtils.getStatusBarHeight(getContext());
-        }else {
-            layoutParams.height = 0;
+            params.height = AndroidUtils.getStatusBarHeight(getContext());
+            statusBar.setLayoutParams(params);
+            if (!softSet.getBoolean("status",false)) {
+                statusBar.setVisibility(View.VISIBLE);
+            }
         }
-        statusBar.setLayoutParams(layoutParams);
+
     }
 
     private void setFragment(MainBaseFragment fragment){

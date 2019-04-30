@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:dividerHeight="0dp"
+                    android:divider="#00000000"
+                    android:id="@+id/music_categories"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+        <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="12dp"
+                android:src="@drawable/arrow_0"
+                android:id="@+id/ExtendedImage"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/playlist_songList"
+                    android:id="@+id/playlist_size"
+                    android:textColor="#000"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="bold"/>
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/add"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/addSongList"/>
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:color/transparent"
+                    android:padding="10dp"
+                    android:src="@mipmap/playlist_conf"
+                    android:id="@+id/songList_config"/>
+        </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:id="@+id/music_song_lists"/>
+        </LinearLayout>
+    </ScrollView>
+    <top.fksoft.mediaSyncPlayer.utils.view.PlayFootView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+</LinearLayout>

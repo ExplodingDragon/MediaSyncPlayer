@@ -16,9 +16,10 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/statusBar"
+                android:id="@+id/logo"
                 android:fitsSystemWindows="false"
-                android:background="?attr/colorPrimaryDark"/>
+                android:visibility="gone"
+                android:background="?attr/colorPrimary"/>
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -45,6 +46,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="false"
-            app:headerLayout="@layout/nav_header_main"
+            app:headerLayout="@layout/main_nav_header"
             app:menu="@menu/activity_main_drawer"/>
 </android.support.v4.widget.DrawerLayout>
