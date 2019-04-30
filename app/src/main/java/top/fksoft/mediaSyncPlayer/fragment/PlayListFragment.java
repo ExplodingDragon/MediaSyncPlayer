@@ -1,6 +1,7 @@
 package top.fksoft.mediaSyncPlayer.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,14 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import top.fksoft.mediaSyncPlayer.R;
+import top.fksoft.mediaSyncPlayer.activity.ListActivity;
 import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
 
-public class PlayListFragment extends MainBaseFragment {
+public class PlayListFragment extends MainBaseFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "PlayListFragment";
     private ListView musicCategories;
     private ListBean[] bean;
@@ -51,6 +50,7 @@ public class PlayListFragment extends MainBaseFragment {
 
 
         musicCategories.setAdapter(new ItemAdapter(getContext(),R.layout.playlist_item_song,bean));
+        musicCategories.setOnItemClickListener(this::onItemClick);
         playlistSize.setOnClickListener(this::onClick);
         extendedImage.setOnClickListener(this::onClick);
     }
@@ -83,6 +83,20 @@ public class PlayListFragment extends MainBaseFragment {
     public int title() {
         return R.string.playList;
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                startActivity(new Intent(getContext(), ListActivity.class));
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+    }
+
     public class ItemAdapter extends ArrayAdapter<ListBean>{
         private ListBean[] item;
         public ItemAdapter(@NonNull Context context, int resource,ListBean[] item) {

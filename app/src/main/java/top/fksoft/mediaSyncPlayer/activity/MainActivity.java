@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import org.litepal.LitePal;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.PlayListFragment;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
-    private LinearLayout drawMenulayout;
+    private LinearLayout drawMenuLayout;
     private SharedPreferences softSet;
     private MainBaseFragment[] fragments = new MainBaseFragment[]{new PlayListFragment()};
     private MainBaseFragment fragment  = null;
@@ -58,6 +59,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void initData() {
+        LitePal.getDatabase();
+
 
     }
 
@@ -78,7 +81,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navView.setNavigationItemSelectedListener(this);
         //listen menu end
         View headerView = navView.getHeaderView(0);
-        drawMenulayout = headerView.findViewById(R.id.nav_layout);
+        drawMenuLayout = headerView.findViewById(R.id.nav_layout);
         sendPermissions(PERM_NAME, PERM);
         setFragment(fragments[0]);
         configStatus2Nav();
@@ -150,20 +153,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void permissionSuccessful(int i) {//授权成功
-        drawMenulayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        drawMenuLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    drawMenulayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
+                    drawMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
                 }else {
-                    drawMenulayout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
+                    drawMenuLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
                 }
-                double width = drawMenulayout.getWidth();
-                double height = drawMenulayout.getHeight();
+                double width = drawMenuLayout.getWidth();
+                double height = drawMenuLayout.getHeight();
                 updateNavWallpaper(width/height);
             }
         });
         //刷新显示
+
+        //初始化文件位置
     }
 
     private void updateNavWallpaper(double prop) { //显示左侧UI
@@ -172,9 +177,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Bitmap bm = ((BitmapDrawable) wallpaperDrawable).getBitmap();
         Bitmap formatWallpaper = BitmapUtils.cropBitmap(bm, prop);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            drawMenulayout.setBackground(new BitmapDrawable(formatWallpaper));
+            drawMenuLayout.setBackground(new BitmapDrawable(formatWallpaper));
         } else {
-            drawMenulayout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
+            drawMenuLayout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
         }
     } //显示壁纸
 
