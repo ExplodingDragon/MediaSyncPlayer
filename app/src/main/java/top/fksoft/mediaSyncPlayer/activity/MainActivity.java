@@ -14,8 +14,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.*;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.PlayListFragment;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
@@ -44,11 +48,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
-    private LinearLayout nav_root_layout;
+    private LinearLayout drawMenulayout;
     private SharedPreferences softSet;
     private MainBaseFragment[] fragments = new MainBaseFragment[]{new PlayListFragment()};
     private MainBaseFragment fragment  = null;
-    private android.widget.TextView statusBar;
+    private TextView statusBar;
+    private TextView navigationBar;
 
 
     @Override
@@ -60,6 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void initView() {
         softSet = SoftPrefFragment.getSharedPreferences(getContext());
         AndroidUtils.immersive(getContext());
+        //沉浸体验
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -72,22 +78,31 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navView.setNavigationItemSelectedListener(this);
         //listen menu end
         View headerView = navView.getHeaderView(0);
-        nav_root_layout = headerView.findViewById(R.id.nav_layout);
+        drawMenulayout = headerView.findViewById(R.id.nav_layout);
         sendPermissions(PERM_NAME, PERM);
         setFragment(fragments[0]);
-        statusBar = findViewById(R.id.logo);
-        setStatusSize();
+        configStatus2Nav();
     }
 
-    private void setStatusSize() {
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
+    private void configStatus2Nav() {
+        statusBar = findViewById(R.id.logo);
+        navigationBar = findViewById(R.id.navigationBar);
+        LinearLayout.LayoutParams statusParams = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
+        LinearLayout.LayoutParams navigationParams = (LinearLayout.LayoutParams) navigationBar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            params.height = AndroidUtils.getStatusBarHeight(getContext());
-            statusBar.setLayoutParams(params);
+            statusParams.height = AndroidUtils.getStatusBarHeight(getContext());
+            navigationParams.height = AndroidUtils.getNavigationBarHeight(getContext());
+            statusBar.setLayoutParams(statusParams);
+            navigationBar.setLayoutParams(navigationParams);
             if (!softSet.getBoolean("status",false)) {
                 statusBar.setVisibility(View.VISIBLE);
             }
+            if (!softSet.getBoolean("navigation",false)) {
+                navigationBar.setVisibility(View.VISIBLE);
+            }
+
         }
+
 
     }
 
@@ -135,16 +150,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void permissionSuccessful(int i) {//授权成功
-        nav_root_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        drawMenulayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    nav_root_layout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
+                    drawMenulayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
                 }else {
-                    nav_root_layout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
+                    drawMenulayout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
                 }
-                double width = nav_root_layout.getWidth();
-                double height = nav_root_layout.getHeight();
+                double width = drawMenulayout.getWidth();
+                double height = drawMenulayout.getHeight();
                 updateNavWallpaper(width/height);
             }
         });
@@ -157,9 +172,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Bitmap bm = ((BitmapDrawable) wallpaperDrawable).getBitmap();
         Bitmap formatWallpaper = BitmapUtils.cropBitmap(bm, prop);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            nav_root_layout.setBackground(new BitmapDrawable(formatWallpaper));
+            drawMenulayout.setBackground(new BitmapDrawable(formatWallpaper));
         } else {
-            nav_root_layout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
+            drawMenulayout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
         }
     } //显示壁纸
 

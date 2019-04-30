@@ -25,6 +25,11 @@
             android:key="status"/>
     <SwitchPreference
             android:defaultValue="false"
+            android:title="@string/close_navigation"
+            android:summary="@string/close_navigation_summary"
+            android:key="navigation"/>
+    <SwitchPreference
+            android:defaultValue="false"
             android:title="@string/seek_start"
             android:summary="@string/seek_start_summary"
             android:key="seek_start"/>

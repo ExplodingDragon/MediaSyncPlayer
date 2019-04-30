@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -42,7 +43,11 @@ public class StartActivity extends Activity {
         if (seek)
             return;
         initView();
-        navigation.setPadding(0, 0, 0, AndroidUtils.getNavigationBarHeight(this));
+        int navigationBarHeight = AndroidUtils.getNavigationBarHeight(this);
+        if (navigationBarHeight>0){
+            navigation.setPadding(0, 0, 0, navigationBarHeight);
+            navigation.setVisibility(View.VISIBLE);
+        }
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(new AlphaAnimation(0.1f, 1.0f));
         Animation translate = new TranslateAnimation(
@@ -67,10 +72,7 @@ public class StartActivity extends Activity {
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        runOnUiThread(() -> {
-                            toMain();
-
-                        });
+                        runOnUiThread(() -> toMain());
                     }
                 }, 500);
             }

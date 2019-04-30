@@ -18,8 +18,8 @@
                 android:id="@+id/logo"
                 android:gravity="bottom|center">
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@mipmap/icon"/>
             <TextView
                     android:layout_width="wrap_content"
@@ -39,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/NavigationBar"
+                    android:visibility="gone"
                     android:orientation="horizontal"/>
         </LinearLayout>
     </LinearLayout>
