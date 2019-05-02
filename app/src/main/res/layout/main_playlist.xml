@@ -8,6 +8,7 @@
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="-12dp"
             android:layout_weight="1">
 
         <LinearLayout
@@ -58,10 +59,13 @@
                     android:src="@mipmap/playlist_conf"
                     android:id="@+id/songList_config"/>
         </LinearLayout>
-            <android.support.v7.widget.RecyclerView
+            <ListView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
+                    android:dividerHeight="0dp"
+                    android:divider="#00000000"
+                    
                     android:id="@+id/music_song_lists"/>
         </LinearLayout>
     </ScrollView>

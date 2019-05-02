@@ -9,9 +9,8 @@ import android.widget.TextView;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
 import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
-import top.fksoft.test.android.dao.BaseActivity;
 
-public abstract class BaseActionBarActivity extends BaseActivity {
+public abstract class BaseActionBarActivity extends FBaseActivity{
     private Toolbar toolbar;
     private LinearLayout children;
     private TextView statusBar;

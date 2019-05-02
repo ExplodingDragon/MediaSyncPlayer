@@ -6,13 +6,15 @@ import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 
-public class MusicListBean extends DataSupport implements Serializable {
+public class MusicListBean  extends DataSupport implements Serializable {
 
     private static final long serialVersionUID = 42342423423451L;
 
     private String title;// 标题
     private String sqlName; //数据表名称
     private String imageSha1; //图片哈希值 ，在 /sdcard/Android/data/${package}/cache 下
+    private long listSize;// 数据表大小
+
 
     public MusicListBean( String title, String sqlName, String imageSha1) {
         this.title = title;
@@ -50,6 +52,14 @@ public class MusicListBean extends DataSupport implements Serializable {
 
     public void setImageSha1(String imageSha1) {
         this.imageSha1 = imageSha1;
+    }
+
+    public long getListSize() {
+        return listSize;
+    }
+
+    public void setListSize(long listSize) {
+        this.listSize = listSize;
     }
 
     @Override

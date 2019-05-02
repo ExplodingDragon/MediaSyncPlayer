@@ -55,12 +55,12 @@ public class PlayFootView extends LinearLayout {
         ovalProgress = findViewById(R.id.ovalProgress);
         musicImageId = findViewById(R.id.musicImageId);
         ovalProgress.setProgress(30);
-        setMusicImage(((BitmapDrawable)getResources().getDrawable(R.mipmap.bg)).getBitmap());
+        setMusicImage(null);
     }
 
     private void setMusicImage(Bitmap bitmap) {
         if (bitmap==null) {
-            bitmap = ((BitmapDrawable)getResources().getDrawable(R.mipmap.icon)).getBitmap();
+            bitmap = ((BitmapDrawable)getResources().getDrawable(R.mipmap.bg2)).getBitmap();
         }
         BitmapDrawable background = new BitmapDrawable(BitmapUtils.getOvalBitmap(bitmap));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

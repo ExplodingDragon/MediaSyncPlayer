@@ -33,7 +33,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
-                    android:background="@drawable/tool_bar_shadow"/>
+                    android:background="@drawable/status_shadow"/>
             <include
                     layout="@layout/content_main"
                     android:layout_width="match_parent"

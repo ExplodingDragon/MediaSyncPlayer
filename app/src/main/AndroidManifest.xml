@@ -17,6 +17,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <service
+                android:name=".service.PlayService"
+                android:enabled="true"
+                android:exported="true">
+        </service>
+
         <activity
                 android:name=".activity.StartActivity"
                 android:theme="@style/Welcome">
@@ -35,10 +41,11 @@
                 android:name=".activity.SettingsActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
-        <activity android:name=".activity.ListActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+                android:name=".activity.SongListActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
         <service
                 android:name=".service.UdpBroadService"
                 android:enabled="true"

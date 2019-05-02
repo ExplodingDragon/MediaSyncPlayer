@@ -7,27 +7,26 @@ import org.litepal.crud.DataSupport;
 import java.io.File;
 import java.io.Serializable;
 
-public class MusicItemBean extends DataSupport implements Serializable {
+public class MusicBean extends DataSupport implements Serializable {
 
     private static final long serialVersionUID = 42342423423451L;
 
-
+    private String musicSha1; //歌曲哈希值
     private String title;//歌曲标题
     private String author;//歌手
     private String musicPath;//歌曲位置
     private long length; //歌曲时长
-
     private String pictureSha1 = null;//图片哈希位置
     private String lyricPath = null; // 歌词位置
 
-    public MusicItemBean(String title, String author, String musicPath, long length) {
+    public MusicBean(String title, String author, String musicPath, long length) {
         this.title = title;
         this.author = author;
         this.musicPath = musicPath;
         this.length = length;
     }
 
-    public MusicItemBean(String title, String author, String musicPath, long length, String pictureSha1, String lyricPath) {
+    public MusicBean(String title, String author, String musicPath, long length, String pictureSha1, String lyricPath) {
         this.title = title;
         this.author = author;
         this.musicPath = musicPath;
@@ -100,12 +99,20 @@ public class MusicItemBean extends DataSupport implements Serializable {
         this.lyricPath = lyricPath;
     }
 
+    public String getMusicSha1() {
+        return musicSha1;
+    }
+
+    public void setMusicSha1(String musicSha1) {
+        this.musicSha1 = musicSha1;
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);
     }
 
-    public static MusicItemBean getInstance(String json) throws JsonSyntaxException {
-        return new Gson().fromJson(json, MusicItemBean.class);
+    public static MusicBean getInstance(String json) throws JsonSyntaxException {
+        return new Gson().fromJson(json, MusicBean.class);
     }
 }

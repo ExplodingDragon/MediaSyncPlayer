@@ -1,6 +1,5 @@
 package top.fksoft.mediaSyncPlayer.activity;
 
-import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,32 +19,18 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import org.litepal.LitePal;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.PlayListFragment;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
 import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
 import top.fksoft.mediaSyncPlayer.utils.BitmapUtils;
+import top.fksoft.mediaSyncPlayer.utils.base.FBaseActivity;
 import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
-import top.fksoft.test.android.dao.BaseActivity;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends FBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private static final String[] PERM_NAME = new String[]
-            {
-                    "获取当前网络状态",
-                    "获取WIFI信息",
-                    "读取设备外部存储空间",
-                    "写入设备外部存储空间",
-            };
 
-    private static final String[] PERM = new String[]
-            {
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            };
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
@@ -59,18 +44,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void initData() {
-        LitePal.getDatabase();
-
 
     }
 
     @Override
     public void initView() {
         softSet = SoftPrefFragment.getSharedPreferences(getContext());
-        AndroidUtils.immersive(getContext());
-        //沉浸体验
+        AndroidUtils.immersive(getContext()); //沉浸体验
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Toolbar 修复
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -82,7 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //listen menu end
         View headerView = navView.getHeaderView(0);
         drawMenuLayout = headerView.findViewById(R.id.nav_layout);
-        sendPermissions(PERM_NAME, PERM);
+        showMenuBackground();
         setFragment(fragments[0]);
         configStatus2Nav();
     }
@@ -94,7 +77,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         LinearLayout.LayoutParams navigationParams = (LinearLayout.LayoutParams) navigationBar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             statusParams.height = AndroidUtils.getStatusBarHeight(getContext());
-            navigationParams.height = AndroidUtils.getNavigationBarHeight(getContext());
+            navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
             statusBar.setLayoutParams(statusParams);
             navigationBar.setLayoutParams(navigationParams);
             if (!softSet.getBoolean("status",false)) {
@@ -107,7 +90,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
 
-    }
+    } //处理状态栏和导航栏
 
     private void setFragment(MainBaseFragment fragment){
         if (fragment == null)
@@ -151,8 +134,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
-    public void permissionSuccessful(int i) {//授权成功
+    public void showMenuBackground() {//指定侧边栏样式
         drawMenuLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {

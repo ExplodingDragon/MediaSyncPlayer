@@ -1,10 +1,8 @@
 package top.fksoft.mediaSyncPlayer.activity;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,21 +12,22 @@ import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
+import top.fksoft.mediaSyncPlayer.io.FileIO;
 import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
+import top.fksoft.mediaSyncPlayer.utils.base.FBaseActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StartActivity extends Activity {
+public class StartActivity extends FBaseActivity {
 
     private LinearLayout logo;
     private LinearLayout navigation;
     private SharedPreferences softSet;
     private boolean seek = false;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+    public void initData() {
         softSet = SoftPrefFragment.getSharedPreferences(this);
         if (softSet.getBoolean("seek_start",false)) {
             seek = true;
@@ -43,7 +42,7 @@ public class StartActivity extends Activity {
         if (seek)
             return;
         initView();
-        int navigationBarHeight = AndroidUtils.getNavigationBarHeight(this);
+        int navigationBarHeight = AndroidUtils.getNavigationBarHeight2(this);
         if (navigationBarHeight>0){
             navigation.setPadding(0, 0, 0, navigationBarHeight);
             navigation.setVisibility(View.VISIBLE);
@@ -86,6 +85,21 @@ public class StartActivity extends Activity {
     }
 
     private void toMain() {
+        final String[] permission = new String[]
+                {
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.ACCESS_WIFI_STATE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                };
+        sendPermissions(getResources().getStringArray(R.array.permission_allow_name),permission);
+    }
+
+    @Override
+    public void permissionSuccessful(int i) {
+        super.permissionSuccessful(i);
+        FileIO.newInstance().initFileSystem();//释放相应的文件
+
         startActivity(new Intent(StartActivity.this, MainActivity.class));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
@@ -99,8 +113,19 @@ public class StartActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void initView() {
+
+    public void initView() {
         logo = findViewById(R.id.logo);
         navigation = findViewById(R.id.NavigationBar);
+    }
+
+    @Override
+    public int initLayout() {
+        return R.layout.activity_start;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

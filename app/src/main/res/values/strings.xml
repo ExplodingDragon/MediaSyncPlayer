@@ -41,6 +41,27 @@
     <string name="MusicMessage">歌手</string>
     <string name="close_navigation">导航栏遮罩</string>
     <string name="close_navigation_summary">关闭导航栏遮罩以处理底部显示异常的问题</string>
-
-
+    <string name="listActivity_load_error">索引信息读取失败！</string>
+    <string name="playlist_localSong_str">本地音乐</string>
+    <string name="delete_song_list">删除此歌单</string>
+    <string name="delete">删除</string>
+    <string name="music_list_add_title">添加歌单</string>
+    <string name="music_list_add_btn_1">添加</string>
+    <string name="song_list_add_fail">添加失败,请检查名称！</string>
+    <string name="cancel">取消</string>
+    <string name="song_list_item_size">%d首歌曲</string>
+    <string name="delete_song_list_message">是否删除 %s?这将永久移除！</string>
+    <string name="no_song">未发现歌曲！</string>
+    <string name="config_song_list">管理歌单</string>
+    <string name="song_list_name">歌单名称：</string>
+    <string name="song_list_image">歌单图片：</string>
+    <string name="save">保存</string>
+    <string name="save_fail">保存失败！请检查</string>
+    <string name="bye">敬请期待...</string>
+    <string-array name="permission_allow_name">
+        <item>获取当前网络状态</item>
+        <item>获取WIFI信息</item>
+        <item>读取设备外部存储空间</item>
+        <item>写入设备外部存储空间</item>
+    </string-array>
 </resources>
