@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -78,13 +79,15 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
         navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
         statusBar.setLayoutParams(statusParams);
         navigationBar.setLayoutParams(navigationParams);
-        if (!softSet.getBoolean("status", false)) {
-            statusBar.setVisibility(View.VISIBLE);
-        }
-        if (!softSet.getBoolean("navigation", false)) {
-            navigationBar.setVisibility(View.VISIBLE);
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
+            if (!softSet.getBoolean("status", false)) {
+                statusBar.setVisibility(View.VISIBLE);
+            }
+            if (!softSet.getBoolean("navigation", false)) {
+                navigationBar.setVisibility(View.VISIBLE);
+            }
+        }
 
     } //处理状态栏和导航栏
 
@@ -134,7 +137,11 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
         drawMenuLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                drawMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    drawMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
+                }else {
+                    drawMenuLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
+                }
                 double width = drawMenuLayout.getWidth();
                 double height = drawMenuLayout.getHeight();
                 updateNavWallpaper(width / height);
@@ -148,7 +155,11 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
         Bitmap bm = ((BitmapDrawable) wallpaperDrawable).getBitmap();
         Bitmap formatWallpaper = BitmapUtils.cropBitmap(bm, prop);
-        drawMenuLayout.setBackground(new BitmapDrawable(formatWallpaper));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            drawMenuLayout.setBackground(new BitmapDrawable(formatWallpaper));
+        }else {
+            drawMenuLayout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
+        }
     } //显示壁纸
 
 }

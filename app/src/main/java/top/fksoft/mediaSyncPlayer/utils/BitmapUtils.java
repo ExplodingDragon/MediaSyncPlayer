@@ -1,6 +1,7 @@
 package top.fksoft.mediaSyncPlayer.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -33,6 +34,7 @@ public class BitmapUtils {
         int height = Math.round(source.getHeight() * scale);
         return Bitmap.createScaledBitmap(source,width,height,false);
     }
+
     public static Bitmap getOvalBitmap(Bitmap s){
         Bitmap squareBitmap = cropBitmap(s, 1);
         Bitmap output = Bitmap.createBitmap(squareBitmap.getWidth(), squareBitmap
@@ -49,6 +51,44 @@ public class BitmapUtils {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(squareBitmap, rect, rect, paint);
         return output;
+    }
+
+    /**
+     * @description 从Resources中加载图片
+     *
+     * @param res
+     * @param resId
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 设置成了true,不占用内存，只获取bitmap宽高
+        BitmapFactory.decodeResource(res, resId, options); // 第一次解码，目的是：读取图片长宽
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight); // 调用上面定义的方法计算inSampleSize值
+        // 使用获取到的inSampleSize值再次解析图片
+        options.inJustDecodeBounds = false;
+        Bitmap src = BitmapFactory.decodeResource(res, resId, options); // 产生一个稍大的缩略图
+        return createScaleBitmap(src, reqWidth, reqHeight, options.inSampleSize); // 通过得到的bitmap进一步产生目标大小的缩略图
+    }
+
+    /**
+     * @description 从SD卡上加载图片
+     *
+     * @param pathName
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap decodeSampledBitmapFromFile(String pathName, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(pathName, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        Bitmap src = BitmapFactory.decodeFile(pathName, options);
+        return createScaleBitmap(src, reqWidth, reqHeight, options.inSampleSize);
     }
 
     public static Bitmap rsBlur(Context context, Bitmap source, int radius, float scale){
@@ -266,5 +306,28 @@ public class BitmapUtils {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
+    }
+    private static Bitmap createScaleBitmap(Bitmap src, int dstWidth, int dstHeight, int inSampleSize) {
+        Bitmap dst = Bitmap.createScaledBitmap(src, dstWidth, dstHeight, false);
+        if (src != dst) { // 如果没有缩放，那么不回收
+            src.recycle(); // 释放Bitmap的native像素数组
+        }
+        return dst;
+    }
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // 源图片的高度和宽度
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 }

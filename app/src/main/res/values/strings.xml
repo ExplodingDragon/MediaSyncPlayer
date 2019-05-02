@@ -35,8 +35,8 @@
     <string name="playlist_like">我喜欢的(%d)</string>
     <string name="close_status">通知栏遮罩</string>
     <string name="close_status_summary">关闭通知栏的遮罩效果，修复通知栏显示异常的问题</string>
-    <string name="seek_start">跳过启动引导</string>
-    <string name="seek_start_summary">跳过软件的启动引导，直接进入首页</string>
+    <string name="seek_start">跳过启动引导(beta)</string>
+    <string name="seek_start_summary">跳过软件的启动引导，直接进入首页(会闪屏)</string>
     <string name="MusicTitle">音乐名称</string>
     <string name="MusicMessage">歌手</string>
     <string name="close_navigation">导航栏遮罩</string>

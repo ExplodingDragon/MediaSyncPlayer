@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -47,7 +48,8 @@ public class SongListActivity extends BaseActivity {
 
 
     @Override
-    public void initData() {
+    public void onStart() {
+        super.onStart();
         configStatus2Nav();// 处理导航栏
         MusicListBean bean = getListBean();
         if (bean == null) {
@@ -94,6 +96,11 @@ public class SongListActivity extends BaseActivity {
        }
     }
 
+
+    @Override
+    public void initData() {
+
+    }
 
     @Override
     public void initView() {
@@ -151,14 +158,18 @@ public class SongListActivity extends BaseActivity {
         LinearLayout.LayoutParams navigationParams = (LinearLayout.LayoutParams) navigationBar.getLayoutParams();
         navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
         navigationBar.setLayoutParams(navigationParams);
-        if (!softSet.getBoolean("status", false)) {
-            CollapsingToolbarLayout.LayoutParams statusParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            statusParams.topMargin = AndroidUtils.getStatusBarHeight(getContext());
-            toolbar.setLayoutParams(statusParams);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+            if (!softSet.getBoolean("status", false)) {
+                CollapsingToolbarLayout.LayoutParams statusParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+                statusParams.topMargin = AndroidUtils.getStatusBarHeight(getContext());
+                toolbar.setLayoutParams(statusParams);
+            }
+            if (!softSet.getBoolean("navigation", false)) {
+                navigationBar.setVisibility(View.VISIBLE);
+            }
         }
-        if (!softSet.getBoolean("navigation", false)) {
-            navigationBar.setVisibility(View.VISIBLE);
-        }
+
 
 
     } //处理状态栏和导航栏

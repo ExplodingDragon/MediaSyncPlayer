@@ -63,6 +63,10 @@ public class PlayFootView extends LinearLayout {
             bitmap = ((BitmapDrawable)getResources().getDrawable(R.mipmap.bg2)).getBitmap();
         }
         BitmapDrawable background = new BitmapDrawable(BitmapUtils.getOvalBitmap(bitmap));
-        musicImageId.setBackground(background);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            musicImageId.setBackground(background);
+        }else {
+            musicImageId.setBackgroundDrawable(background);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package top.fksoft.mediaSyncPlayer.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
@@ -16,8 +17,10 @@ import top.fksoft.mediaSyncPlayer.activity.SongListActivity;
 import top.fksoft.mediaSyncPlayer.bean.MusicListBean;
 import top.fksoft.mediaSyncPlayer.io.SongSql;
 import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
+import top.fksoft.mediaSyncPlayer.utils.BitmapUtils;
 import top.fksoft.mediaSyncPlayer.utils.base.MainBaseFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -211,7 +214,12 @@ public class PlayListFragment extends MainBaseFragment implements AdapterView.On
             TextView listTextSize = convertView.findViewById(R.id.list_text_size);
             ImageView itemDelete = convertView.findViewById(R.id.item_delete);
             MusicListBean bean = listBeans.get(position);
-            listImage.setImageBitmap(BitmapFactory.decodeFile(SoftApplication.getPictureCachePath(bean.getImageSha1()).getAbsolutePath()));
+            File imagePath = SoftApplication.getPictureCachePath(bean.getImageSha1());
+            if (imagePath.isFile()) {
+                Bitmap bm = BitmapUtils.decodeSampledBitmapFromFile(imagePath.getAbsolutePath(), 100, 100);
+                listImage.setImageBitmap(BitmapUtils.createBitmap(bm,10));
+            }
+
             listText.setText(bean.getTitle());
             listTextSize.setText(getString(R.string.song_list_item_size, bean.getListSize()));
             convertView.findViewById(R.id.onClick).setOnClickListener(v -> songItemClick(position));

@@ -1,6 +1,7 @@
 package top.fksoft.mediaSyncPlayer.utils.base;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,10 +45,11 @@ public abstract class BaseActionBarActivity extends FBaseActivity {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
         params.height = AndroidUtils.getStatusBarHeight(getContext());
         statusBar.setLayoutParams(params);
-        if (!softSet.getBoolean("status", false)) {
-            statusBar.setVisibility(View.VISIBLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (!softSet.getBoolean("status", false)) {
+                statusBar.setVisibility(View.VISIBLE);
+            }
         }
-
     }
 
 
