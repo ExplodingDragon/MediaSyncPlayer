@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,7 +36,7 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
     private LinearLayout drawMenuLayout;
     private SharedPreferences softSet;
     private MainBaseFragment[] fragments = new MainBaseFragment[]{new PlayListFragment()};
-    private MainBaseFragment fragment  = null;
+    private MainBaseFragment fragment = null;
     private TextView statusBar;
     private TextView navigationBar;
 
@@ -75,24 +74,21 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
         navigationBar = findViewById(R.id.navigationBar);
         LinearLayout.LayoutParams statusParams = (LinearLayout.LayoutParams) statusBar.getLayoutParams();
         LinearLayout.LayoutParams navigationParams = (LinearLayout.LayoutParams) navigationBar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            statusParams.height = AndroidUtils.getStatusBarHeight(getContext());
-            navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
-            statusBar.setLayoutParams(statusParams);
-            navigationBar.setLayoutParams(navigationParams);
-            if (!softSet.getBoolean("status",false)) {
-                statusBar.setVisibility(View.VISIBLE);
-            }
-            if (!softSet.getBoolean("navigation",false)) {
-                navigationBar.setVisibility(View.VISIBLE);
-            }
-
+        statusParams.height = AndroidUtils.getStatusBarHeight(getContext());
+        navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
+        statusBar.setLayoutParams(statusParams);
+        navigationBar.setLayoutParams(navigationParams);
+        if (!softSet.getBoolean("status", false)) {
+            statusBar.setVisibility(View.VISIBLE);
+        }
+        if (!softSet.getBoolean("navigation", false)) {
+            navigationBar.setVisibility(View.VISIBLE);
         }
 
 
     } //处理状态栏和导航栏
 
-    private void setFragment(MainBaseFragment fragment){
+    private void setFragment(MainBaseFragment fragment) {
         if (fragment == null)
             return;
         this.fragment = fragment;
@@ -127,9 +123,9 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(Gravity.START)){
+        if (drawerLayout.isDrawerOpen(Gravity.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -138,31 +134,21 @@ public class MainActivity extends FBaseActivity implements NavigationView.OnNavi
         drawMenuLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    drawMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
-                }else {
-                    drawMenuLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this::onGlobalLayout);
-                }
+                drawMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this::onGlobalLayout);
                 double width = drawMenuLayout.getWidth();
                 double height = drawMenuLayout.getHeight();
-                updateNavWallpaper(width/height);
+                updateNavWallpaper(width / height);
             }
         });
-        //刷新显示
-
-        //初始化文件位置
     }
 
-    private void updateNavWallpaper(double prop) { //显示左侧UI
+
+    private void updateNavWallpaper(double prop) { //显示左侧UI  OutOfMemoryError!
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
         Bitmap bm = ((BitmapDrawable) wallpaperDrawable).getBitmap();
         Bitmap formatWallpaper = BitmapUtils.cropBitmap(bm, prop);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            drawMenuLayout.setBackground(new BitmapDrawable(formatWallpaper));
-        } else {
-            drawMenuLayout.setBackgroundDrawable(new BitmapDrawable(formatWallpaper));
-        }
+        drawMenuLayout.setBackground(new BitmapDrawable(formatWallpaper));
     } //显示壁纸
 
 }

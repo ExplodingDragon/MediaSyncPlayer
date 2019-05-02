@@ -2,10 +2,12 @@ package top.fksoft.mediaSyncPlayer.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.gson.Gson;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,6 +24,8 @@ import io.reactivex.schedulers.Schedulers;
 import top.fksoft.mediaSyncPlayer.Config.SoftApplication;
 import top.fksoft.mediaSyncPlayer.R;
 import top.fksoft.mediaSyncPlayer.bean.MusicListBean;
+import top.fksoft.mediaSyncPlayer.fragment.SoftPrefFragment;
+import top.fksoft.mediaSyncPlayer.utils.AndroidUtils;
 import top.fksoft.mediaSyncPlayer.utils.BitmapUtils;
 import top.fksoft.mediaSyncPlayer.utils.view.PlayFootView;
 import top.fksoft.test.android.dao.BaseActivity;
@@ -38,10 +42,13 @@ public class SongListActivity extends BaseActivity {
     private RecyclerView listView;
     private PlayFootView playFoot;
     private TextView noneSong;
+    private SharedPreferences softSet;
+    private TextView navigationBar;
 
 
     @Override
     public void initData() {
+        configStatus2Nav();// 处理导航栏
         MusicListBean bean = getListBean();
         if (bean == null) {
             showToast(R.string.listActivity_load_error);
@@ -72,21 +79,27 @@ public class SongListActivity extends BaseActivity {
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(bitmap -> headerImage.setImageBitmap(bitmap));
 
-
     }
 
     private MusicListBean getListBean() {
-        String data = getIntent().getStringExtra("DATA");
-        if (data != null){
-            return new Gson().fromJson(data,MusicListBean.class);
+        Intent intent = getIntent();
+        if (intent == null) {
+            return null;
         }
+       try{
+           MusicListBean result = (MusicListBean) intent.getSerializableExtra("DATA");
+           return result;
+       }catch (Exception e){
         return null;
+       }
     }
-
 
 
     @Override
     public void initView() {
+        softSet = SoftPrefFragment.getSharedPreferences(getContext());
+        AndroidUtils.immersive(getContext()); //沉浸体验
+
         appBar = findViewById(R.id.appBar);
         headerImage = findViewById(R.id.header_image);
         toolbar = findViewById(R.id.toolbar);
@@ -114,6 +127,7 @@ public class SongListActivity extends BaseActivity {
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
             }
+
             @Override
             public int getItemCount() {
                 return 10;
@@ -132,14 +146,29 @@ public class SongListActivity extends BaseActivity {
     }
 
 
+    private void configStatus2Nav() {
+        navigationBar = findViewById(R.id.navigationBar);
+        LinearLayout.LayoutParams navigationParams = (LinearLayout.LayoutParams) navigationBar.getLayoutParams();
+        navigationParams.height = AndroidUtils.getNavigationBarHeight2(getContext());
+        navigationBar.setLayoutParams(navigationParams);
+        if (!softSet.getBoolean("status", false)) {
+            CollapsingToolbarLayout.LayoutParams statusParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+            statusParams.topMargin = AndroidUtils.getStatusBarHeight(getContext());
+            toolbar.setLayoutParams(statusParams);
+        }
+        if (!softSet.getBoolean("navigation", false)) {
+            navigationBar.setVisibility(View.VISIBLE);
+        }
 
 
-    public static void startActivity(Context context, MusicListBean bean){
+    } //处理状态栏和导航栏
+
+    public static void startActivity(Context context, MusicListBean bean) {
         Intent intent = new Intent(context, SongListActivity.class);
-        if (bean!=null){
-            intent.putExtra("DATA",bean.toString());
-        }else {
-            Log.w(TAG, "startActivity: null Data." );
+        if (bean != null) {
+            intent.putExtra("DATA", bean);
+        } else {
+            Log.w(TAG, "startActivity: null Data.");
         }
         context.startActivity(intent);
     }
